@@ -2,6 +2,8 @@ import httpStatus from "http-status";
 import ApiError from "../../../errors/ApiError";
 import { IBook } from "./book.interface"
 import { Book } from "./book.model"
+import { IPaginationOptions } from "../../../interfaces/pagination";
+
 
 const create = async (data: IBook): Promise<IBook> => {
     const book = await Book.create(data);
@@ -10,11 +12,12 @@ const create = async (data: IBook): Promise<IBook> => {
     }
     return book;
 }
-const getBooks = async (): Promise<IBook[] | null> => {
+const getBooks = async (paginationOptions: IPaginationOptions): Promise<IBook[] | null> => {//! i have to add pagination
     const books = await Book.find({});
     if (!books) {
         throw new ApiError(httpStatus.BAD_REQUEST, "books are not exists")
     }
+    // console.log("get books");
     return books;
 }
 const getBook = async (id: string): Promise<IBook | null> => {

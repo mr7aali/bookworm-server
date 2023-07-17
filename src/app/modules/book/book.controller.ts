@@ -4,6 +4,9 @@ import { bookService } from "./book.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from 'http-status';
 import { IBook } from "./book.interface";
+import { IPaginationOptions } from "../../../interfaces/pagination";
+import pick from "../../../shared/pick";
+import { paginationFields } from "../../../constants/pagination";
 
 const create: RequestHandler = catchAsync(
     async (req: Request, res: Response) => {
@@ -31,9 +34,22 @@ const getBook = catchAsync(
         })
     }
 )
-const getBooks = catchAsync(//single book
+const getBooks = catchAsync(//! i have to add pagination
     async (req: Request, res: Response) => {
-        const result = await bookService.getBooks();
+
+
+        // const paginationOptions = {
+        //     page: Number(req.query.page),
+        //     limit: Number(req.query.limit),
+        //     sortBy: req.query.sortBy ,
+        //     sortOrder: req.query.sortOrder 
+        // }
+
+        const paginationOptions = pick(req.query, paginationFields)
+        console.log(paginationOptions);
+
+        
+        const result = await bookService.getBooks(paginationOptions);
         sendResponse<IBook[] | null>(res, {
             statusCode: httpStatus.OK,
             success: true,
@@ -41,7 +57,7 @@ const getBooks = catchAsync(//single book
             data: result,
         })
     }
-)
+);
 const deleteBook = catchAsync(//single book
     async (req: Request, res: Response) => {
         const id = req.params.id;
