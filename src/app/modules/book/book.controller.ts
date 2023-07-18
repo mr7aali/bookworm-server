@@ -37,24 +37,19 @@ const getBook = catchAsync(
 const getBooks = catchAsync(//! i have to add pagination
     async (req: Request, res: Response) => {
 
-
-        // const paginationOptions = {
-        //     page: Number(req.query.page),
-        //     limit: Number(req.query.limit),
-        //     sortBy: req.query.sortBy ,
-        //     sortOrder: req.query.sortOrder 
-        // }
-
         const paginationOptions = pick(req.query, paginationFields)
-        console.log(paginationOptions);
+        // console.log(paginationOptions);
 
         
+
+
         const result = await bookService.getBooks(paginationOptions);
         sendResponse<IBook[] | null>(res, {
             statusCode: httpStatus.OK,
             success: true,
             message: 'Books got successfully!',
-            data: result,
+            meta: result.meta, 
+            data: result.data,
         })
     }
 );
