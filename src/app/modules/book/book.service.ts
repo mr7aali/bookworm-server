@@ -31,9 +31,7 @@ const getBooks = async (paginationOptions: IPaginationOptions): Promise<IGeneric
     if (sortBy && sortOrder) {
         sortCondition[sortBy] = sortOrder;
     }
- 
 
-    console.log(sortCondition);
     const books = await Book.find().sort(sortCondition).skip(skip).limit(limit);
     if (!books) {
         throw new ApiError(httpStatus.BAD_REQUEST, "books are not exists")
@@ -59,6 +57,14 @@ const getBook = async (id: string): Promise<IBook | null> => {
     }
     return books;
 }
+const getAllBooks = async (): Promise<IBook[] | null> => {
+    const books = await Book.find({});
+
+    if (!books) {
+        throw new ApiError(httpStatus.BAD_REQUEST, "books are not exists")
+    }
+    return books;
+}
 const deleteBook = async (id: string): Promise<IBook | null> => {
     const books = await Book.findOneAndDelete({ _id: id });
     console.log(books);
@@ -67,9 +73,24 @@ const deleteBook = async (id: string): Promise<IBook | null> => {
     }
     return books;
 }
+const deleteByAuthor = async (id: string, reqEmail: string) => {
+    const book = await Book.findById(id);
+
+    const { email } = book;
+    console.log();
+    if (!(email === reqEmail)) {
+        throw new ApiError(httpStatus.NON_AUTHORITATIVE_INFORMATION, "You are not authorized")
+    }
+    // const books = await Book.findOneAndDelete({ _id: id });
+    // console.log(books);
+    // if (!books) {
+    //     throw new ApiError(httpStatus.BAD_REQUEST, "book are aredy deleted")
+    // }
+    // return books;
+}
 
 export const bookService = {
-    create,
-    getBooks,
+    create, getAllBooks,
+    getBooks, deleteByAuthor,
     getBook, deleteBook
 }

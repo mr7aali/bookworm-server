@@ -39,16 +39,12 @@ const getBooks = catchAsync(//! i have to add pagination
 
         const paginationOptions = pick(req.query, paginationFields)
         // console.log(paginationOptions);
-
-        
-
-
         const result = await bookService.getBooks(paginationOptions);
         sendResponse<IBook[] | null>(res, {
             statusCode: httpStatus.OK,
             success: true,
             message: 'Books got successfully!',
-            meta: result.meta, 
+            meta: result.meta,
             data: result.data,
         })
     }
@@ -64,14 +60,46 @@ const deleteBook = catchAsync(//single book
             data: result,
         })
     }
+);
+const deleteByAuthor = catchAsync(//single book
+    async (req: Request, res: Response) => {
+        const {id, email }= req.body;
+     
+
+
+        const result = await bookService.deleteByAuthor(id,email);
+    //     sendResponse<IBook | null>(res, {
+    //         statusCode: httpStatus.OK,
+    //         success: true,
+    //         message: 'Deleted successfully!',
+    //         data: result,
+    //     })
+    // }
+    }
+);
+const getAllBooks = catchAsync(
+    async (req: Request, res: Response) => {
+        const result = await bookService.getAllBooks();
+
+
+        sendResponse<IBook[] | null>(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'books received successfully!',
+            data: result,
+        })
+    }
+
+
 )
 
 
 
 
+
+
 export const bookController = {
-    create,
-    getBooks,
-    getBook,
-    deleteBook
+    create, getAllBooks,
+    getBooks, getBook,
+    deleteBook,deleteByAuthor
 }
