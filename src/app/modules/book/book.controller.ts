@@ -4,7 +4,6 @@ import { bookService } from "./book.service";
 import sendResponse from "../../../shared/sendResponse";
 import httpStatus from 'http-status';
 import { IBook } from "./book.interface";
-import { IPaginationOptions } from "../../../interfaces/pagination";
 import pick from "../../../shared/pick";
 import { paginationFields } from "../../../constants/pagination";
 
@@ -17,6 +16,19 @@ const create: RequestHandler = catchAsync(
             statusCode: httpStatus.OK,
             success: true,
             message: 'Book created successfully!',
+            data: result,
+        })
+    }
+);
+const update: RequestHandler = catchAsync(
+    async (req: Request, res: Response) => {
+        const id = req.params.id;
+        const data = req.body;
+        const result = await bookService.update(id,data);
+        sendResponse(res, {
+            statusCode: httpStatus.OK,
+            success: true,
+            message: 'Book updated successfully!',
             data: result,
         })
     }
@@ -52,6 +64,7 @@ const getBooks = catchAsync(//! i have to add pagination
 const deleteBook = catchAsync(//single book
     async (req: Request, res: Response) => {
         const id = req.params.id;
+        console.log(id);
         const result = await bookService.deleteBook(id);
         sendResponse<IBook | null>(res, {
             statusCode: httpStatus.OK,
@@ -61,37 +74,23 @@ const deleteBook = catchAsync(//single book
         })
     }
 );
-const deleteByAuthor = catchAsync(//single book
-    async (req: Request, res: Response) => {
-        const {id, email }= req.body;
-     
+
+// const deleteByAuthor = catchAsync(//single book
+//     async (req: Request, res: Response) => {
+//         const { id, email } = req.body;
 
 
-        const result = await bookService.deleteByAuthor(id,email);
-    //     sendResponse<IBook | null>(res, {
-    //         statusCode: httpStatus.OK,
-    //         success: true,
-    //         message: 'Deleted successfully!',
-    //         data: result,
-    //     })
-    // }
-    }
-);
-const getAllBooks = catchAsync(
-    async (req: Request, res: Response) => {
-        const result = await bookService.getAllBooks();
 
-
-        sendResponse<IBook[] | null>(res, {
-            statusCode: httpStatus.OK,
-            success: true,
-            message: 'books received successfully!',
-            data: result,
-        })
-    }
-
-
-)
+//         const result = await bookService.deleteByAuthor(id, email);
+//         //     sendResponse<IBook | null>(res, {
+//         //         statusCode: httpStatus.OK,
+//         //         success: true,
+//         //         message: 'Deleted successfully!',
+//         //         data: result,
+//         //     })
+//         // }
+//     }
+// );
 
 
 
@@ -99,7 +98,8 @@ const getAllBooks = catchAsync(
 
 
 export const bookController = {
-    create, getAllBooks,
+    create,
     getBooks, getBook,
-    deleteBook,deleteByAuthor
+    deleteBook,
+     update
 }

@@ -8,6 +8,8 @@ export interface IBook {
     reviews?: string[];
     email: string;
     image:string;
+    wishList?:string[];
+    markAsReadList?:string[];
 }
 
 interface IBookMethods {

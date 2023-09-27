@@ -4,10 +4,12 @@ const router = express.Router();
 
 router.post("/create-book", bookController.create);
 router.get("/get-book", bookController.getBooks);
-router.get("/all-book", bookController.getAllBooks);
-router.get("/get-book/:id", bookController.getBook);
-router.delete("/get-book/:id", bookController.deleteBook);
 
-router.post("/delete-book",bookController.deleteByAuthor);
+router.get("/get-book/:id", bookController.getBook);
+
+router.delete("/delete-book/:id", bookController.deleteBook);
+router.patch("/update-book/:id",bookController.update)
+
+// router.post("/delete-book",bookController.deleteByAuthor);
 
 export const BookRoutes = router;
